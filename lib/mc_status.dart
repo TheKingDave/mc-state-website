@@ -28,10 +28,9 @@ class Main {
     Timer.periodic(Duration(seconds: 1), (t) => ping());
 
     final app = router.Router(notFoundHandler: st.createStaticHandler('web/public', defaultDocument: 'index.html'));
-
+    
     app.get('/status', getStatus);
     app.get('/ws', webSocketHandler(handleWebsocket));
-    
 
     final server = await io.serve(app, '0.0.0.0', 8000);
     print('Serving at http://${server.address.host}:${server.port}');
