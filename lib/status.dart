@@ -12,7 +12,7 @@ class Status {
   final String? modt;
   final int? onlinePlayers;
   final int? maxPlayers;
-  final List<String>? players;
+  final List<PlayerStatus>? players;
   
   Status._(this.state, {this.ping, this.modt, this.onlinePlayers, this.maxPlayers,
       this.players});
@@ -33,12 +33,12 @@ class Status {
   Map<String, dynamic> toJson() {
     if (state == State.online) {
       return {
-        'state': 'ok',
+        'state': state.name,
         'ping': ping,
         'modt': modt,
         'onlinePlayers': onlinePlayers,
         'maxPlayers': maxPlayers,
-        'players': players,
+        'players': players!.map((e) => e.toJson()).toList(),
       };
     }
     return {'state': state.name};
@@ -53,6 +53,7 @@ class Status {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Status &&
+          state == other.state &&
           runtimeType == other.runtimeType &&
           modt == other.modt &&
           onlinePlayers == other.onlinePlayers &&
@@ -61,8 +62,45 @@ class Status {
 
   @override
   int get hashCode =>
+      state.hashCode ^
       modt.hashCode ^
       onlinePlayers.hashCode ^
       maxPlayers.hashCode ^
       players.hashCode;
+}
+
+class PlayerStatus implements Comparable<PlayerStatus> {
+  final String name;
+  final String uuid;
+
+  PlayerStatus(this.name, this.uuid);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'uuid': uuid,
+    };
+  }
+
+
+  @override
+  String toString() {
+    return name;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlayerStatus &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          uuid == other.uuid;
+
+  @override
+  int get hashCode => name.hashCode ^ uuid.hashCode;
+
+  @override
+  int compareTo(PlayerStatus other) {
+    return name.compareTo(other.name);
+  }
 }

@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   crypto:
     dependency: transitive
     description:
@@ -32,9 +39,11 @@ packages:
   dart_minecraft:
     dependency: "direct main"
     description:
-      name: dart_minecraft
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "4a9598a61f3524e3c5bee8c87406d2441f354fa5"
+      url: "https://github.com/TheKingDave/dart_minecraft.git"
+    source: git
     version: "0.4.0"
   http:
     dependency: transitive
@@ -71,6 +80,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   path:
     dependency: transitive
     description:
@@ -92,6 +108,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  shelf_static:
+    dependency: "direct main"
+    description:
+      name: shelf_static
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   shelf_web_socket:
     dependency: "direct main"
     description:
