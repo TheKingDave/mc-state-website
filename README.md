@@ -23,12 +23,14 @@ services:
 
 ## Config
 
-| CLI      | Abbr | ENV      | Description                    | Default    |
-| -------- | ---- | -------- | ------------------------------ | ---------- |
-| port     | p    | PORT     | Port to listen on              | 8000       |
-| hostname | h    | HOSTNAME | On which hostname to listen to | 0.0.0.0    |
-| server   | s    | SERVER   | Minecraft ip/domain and port   | localhost  |
-| webPath  | w    | WEB_PATH | Where the web gui is located   | web/public |
+The priority of the configuration is: CLI Arguments, dotenv, environment, default 
+
+| CLI     | Abbr | ENV      | Description                    | Default    |
+| ------- | ---- | -------- | ------------------------------ | ---------- |
+| port    | p    | PORT     | Port to listen on              | 8000       |
+| host    | h    | HOST     | On which hostname to listen to | 127.0.0.1  |
+| server  | s    | SERVER   | Minecraft ip/domain and port   | 127.0.0.1  |
+| webPath | w    | WEB_PATH | Where the web GUI is located   | web/public |
 
 You can also create a `.env` file to load environment variables from that file.
 
