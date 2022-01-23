@@ -33,7 +33,7 @@ class Config {
     print(env);
     load();
     print(env);
-    
+
     return Config._str(
       port: result['port'] ?? env['PORT'] ?? '8000',
       host: result['host'] ?? env['HOST'] ?? '127.0.0.1',

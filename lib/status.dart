@@ -13,10 +13,14 @@ class Status {
   final int? onlinePlayers;
   final int? maxPlayers;
   final List<PlayerStatus>? players;
-  
-  Status._(this.state, {this.ping, this.modt, this.onlinePlayers, this.maxPlayers,
+
+  Status._(this.state,
+      {this.ping,
+      this.modt,
+      this.onlinePlayers,
+      this.maxPlayers,
       this.players});
-  
+
   factory Status.unknown() => Status._(State.unknown);
   factory Status.offline() => Status._(State.offline);
 
@@ -81,7 +85,6 @@ class PlayerStatus implements Comparable<PlayerStatus> {
       'uuid': uuid,
     };
   }
-
 
   @override
   String toString() {

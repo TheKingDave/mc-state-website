@@ -15,21 +15,23 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Main {
   Status cache = Status.unknown();
-  
+
   String get jsonCache => jsonEncode(cache.toJson());
 
   final List<WebSocketChannel> sockets = <WebSocketChannel>[];
   late final Config config;
   int offlineCounter = 0;
-  
+
   Main(List<String> arguments) {
     config = Config(arguments);
     init();
   }
-  
+
   void init() async {
-    final app = router.Router(notFoundHandler: st.createStaticHandler(config.webPath, defaultDocument: 'index.html'));
-    
+    final app = router.Router(
+        notFoundHandler: st.createStaticHandler(config.webPath,
+            defaultDocument: 'index.html'));
+
     app.get('/status', getStatus);
     app.get('/ws', webSocketHandler(handleWebsocket));
 
@@ -39,18 +41,18 @@ class Main {
     ping();
     Timer.periodic(Duration(seconds: 1), (t) => ping());
   }
-  
+
   Response getStatus(Request request) {
     return Response.ok(jsonCache, headers: {
       HttpHeaders.contentTypeHeader: ContentType.json.toString(),
       HttpHeaders.accessControlAllowOriginHeader: '*',
     });
   }
-  
+
   void handleWebsocket(WebSocketChannel websocket) {
     websocket.sink.add(jsonCache);
     websocket.stream.listen((msg) {
-      if((msg as String).toLowerCase() == 'get') {
+      if ((msg as String).toLowerCase() == 'get') {
         websocket.sink.add(jsonCache);
       }
     });
@@ -75,14 +77,14 @@ class Main {
         players: players.sample.map((e) => PlayerStatus(e.name, e.id)).toList(),
       ));
       offlineCounter = 0;
-    } on mc.PingException catch(e, stack) {
+    } on mc.PingException catch (e, stack) {
       print(e);
       offlineCounter++;
-      if(offlineCounter >= 5) {
+      if (offlineCounter >= 5) {
         updateCache(Status.offline());
       }
       return;
-    } catch(e, stack) {
+    } catch (e, stack) {
       print(e);
       print(stack);
     }
@@ -91,15 +93,15 @@ class Main {
   void updateCache(Status status) {
     bool notify = cache != status;
     cache = status;
-    if(notify) {
+    if (notify) {
       cacheChanged(status);
       print('Notify: $cache');
     }
   }
-  
+
   void cacheChanged(Status status) {
-    for(final socket in sockets) {
+    for (final socket in sockets) {
       socket.sink.add(jsonCache);
     }
-  } 
+  }
 }
