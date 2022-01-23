@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mc_status/config.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart' as router;
@@ -18,8 +19,11 @@ class Main {
   String get jsonCache => jsonEncode(cache.toJson());
 
   final List<WebSocketChannel> sockets = <WebSocketChannel>[];
+  late final Config config;
+  int offlineCounter = 0;
   
-  Main() {
+  Main(List<String> arguments) {
+    config = Config(arguments);
     init();
   }
   
@@ -27,12 +31,12 @@ class Main {
     ping();
     Timer.periodic(Duration(seconds: 1), (t) => ping());
 
-    final app = router.Router(notFoundHandler: st.createStaticHandler('web/public', defaultDocument: 'index.html'));
+    final app = router.Router(notFoundHandler: st.createStaticHandler(config.webPath, defaultDocument: 'index.html'));
     
     app.get('/status', getStatus);
     app.get('/ws', webSocketHandler(handleWebsocket));
 
-    final server = await io.serve(app, '0.0.0.0', 8000);
+    final server = await io.serve(app, config.hostname, config.port);
     print('Serving at http://${server.address.host}:${server.port}');
   }
   
@@ -55,7 +59,7 @@ class Main {
 
   void ping() async {
     try {
-      final server = await mc.ping('192.168.0.10');
+      final server = await mc.ping(config.server);
 
       if (server == null || server.response == null) {
         throw mc.PingException('');
@@ -70,9 +74,13 @@ class Main {
         onlinePlayers: players.online,
         players: players.sample.map((e) => PlayerStatus(e.name, e.id)).toList(),
       ));
+      offlineCounter = 0;
     } on mc.PingException catch(e, stack) {
       print(e);
-      updateCache(Status.offline());
+      offlineCounter++;
+      if(offlineCounter >= 5) {
+        updateCache(Status.offline());
+      }
       return;
     } catch(e, stack) {
       print(e);
