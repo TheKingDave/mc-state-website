@@ -1,2 +1,10 @@
-.idea/
+.dockerignore
+Dockerfile
 web/node_modules
+web/public/build
+build/
+.dart_tool/
+.git/
+.github/
+.gitignore
+.packages
