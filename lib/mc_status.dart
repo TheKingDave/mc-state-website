@@ -28,16 +28,16 @@ class Main {
   }
   
   void init() async {
-    ping();
-    Timer.periodic(Duration(seconds: 1), (t) => ping());
-
     final app = router.Router(notFoundHandler: st.createStaticHandler(config.webPath, defaultDocument: 'index.html'));
     
     app.get('/status', getStatus);
     app.get('/ws', webSocketHandler(handleWebsocket));
 
-    final server = await io.serve(app, config.hostname, config.port);
+    final server = await io.serve(app, config.host, config.port);
     print('Serving at http://${server.address.host}:${server.port}');
+
+    ping();
+    Timer.periodic(Duration(seconds: 1), (t) => ping());
   }
   
   Response getStatus(Request request) {
